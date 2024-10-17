@@ -10,7 +10,7 @@ public class Map
 {
     MapColor[][] internalMap;
     protected int pWidth;
-    protected  int pHeight;
+    protected int pHeight;
     // sor -> Width
     // oszlop -> Height
 
@@ -116,7 +116,7 @@ public class Map
      * @param color Szín
      * @return Igaz ha sikeres
      */
-    protected boolean SetColor(int Width, int Height, MapColor color)
+    public boolean SetColor(int Width, int Height, MapColor color)
     {
         if (CheckValid(Width, Height))
         {
@@ -134,23 +134,21 @@ public class Map
     {
         if (number < 4)
             return false;
-        if (number > 12)
-            return false;
-        return  true;
+        return number <= 12;
     }
 
 
     /** Megnezi hogy vizszintese, függölegesen, atlosan, megvan-e a 4.
-     * @return Egy "Pair"-be az eredményt. Ha igaz akkor van és a nyertes a szin, ha nincs akkor szin is üres "Nonde"
+     * @return Egy "Pair"-be az eredményt. Ha igaz akkor van és a nyertes a szin, ha nincs akkor szin is üres "None"
      */
-    Pair<Boolean, MapColor> Check4()
+    public Pair<Boolean, MapColor> Check4()
     {
         // vizstintes check:
         for (MapColor[] mapColors : internalMap)
         {
             MapColor prev_MapColor = MapColor.None;
-            List<MapColor> Reds = new ArrayList<MapColor>();
-            List<MapColor> Yellows = new ArrayList<MapColor>();
+            List<MapColor> Reds = new ArrayList<>();
+            List<MapColor> Yellows = new ArrayList<>();
             for (MapColor mapColor : mapColors)
             {
                 if (prev_MapColor != mapColor)
@@ -163,17 +161,35 @@ public class Map
                     Reds.add(mapColor);
                 if (prev_MapColor == MapColor.Yellow)
                     Yellows.add(mapColor);
-                // print for savety
-                System.out.print(prev_MapColor + " " + mapColor + " " + Reds.size() + " " + Yellows.size() + "\n");
+                // print for safety
+                //System.out.print(prev_MapColor + " " + mapColor + " " + Reds.size() + " " + Yellows.size() + "\n");
                 if (Reds.size() == 4)
                     return new Pair<>(true, MapColor.Red);
                 if (Yellows.size() == 4)
                     return new Pair<>(true, MapColor.Yellow);
             }
-            System.out.println();
+            //System.out.println();
         }
 
         return new Pair<>(false, MapColor.None);
     }
 
+    public int GetHeight()
+    {
+        return pHeight;
+    }
+    public int GetWidth()
+    {
+        return pWidth;
+    }
+
+    public MapColor GetColor(int Width, int Height)
+    {
+        if (internalMap.length < Width)
+            return MapColor.None;
+        if (internalMap[0].length < Height)
+            return MapColor.None;
+
+        return internalMap[Width][Height];
+    }
 }
