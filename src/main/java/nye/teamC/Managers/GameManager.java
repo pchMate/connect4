@@ -1,62 +1,76 @@
 package nye.teamC.Managers;
 
-import nye.teamC.Command.*;
+import nye.teamC.Command.ICommand;
+import nye.teamC.Command.IMapSetter;
+import nye.teamC.Command.IMapGetter;
+import nye.teamC.Command.MoveCommand;
+import nye.teamC.Command.QuitCommand;
 import nye.teamC.Map;
 
 import java.util.Scanner;
 
 public class GameManager
 {
-    protected CommandManager CommandM;
-    public Scanner in = new Scanner(System.in);
-    String PlayerName;
-    Map map;
-    boolean IsGameEnded = false;
-
-    public GameManager()
-    {
-        CommandM = new CommandManager();
-    }
-
-    public void Start()
+    private final CommandManager commandManager = new CommandManager();
+    private final Scanner in = new Scanner(System.in);
+    private String playerName;
+    private Map map;
+    private boolean isGameEnded = false;
+    /**
+     * Starting the Game
+     */
+    public void start()
     {
         System.out.println("Please Type your name to begin!");
-        PlayerName = in.next();
+        playerName = in.next();
         System.out.println("Commands available for your:");
-        System.out.println("Commands Should be used as CommandName Enter Command Parameter (If there is no parameter just press enter)");
-        CommandM.PrintCommands();
+        System.out.println("Commands Should be used as CommandName Parameter");
+        commandManager.printCommands();
     }
 
-    public void UseCommand(String command, String args)
+    /** Use Command inside the Game.
+     * @param command Command to use
+     */
+    public void useCommand(final String command)
     {
-        if (IsGameEnded)
+        if (isGameEnded)
         {
             System.out.println("Game has been ended!");
         }
-        ICommand iCommand = CommandM.GetCommand(command);
+        String args = "";
+        ICommand iCommand = commandManager.getCommand(command);
+        if (iCommand == null)
+        {
+            System.out.println("No command: " + command);
+            return;
+        }
+        if (iCommand.hasArgs())
+        {
+            args = in.next();
+        }
         if (iCommand instanceof QuitCommand)
         {
-            IsGameEnded = true;
+            isGameEnded = true;
             System.out.println("quitting!");
             return;
         }
         if (iCommand instanceof IMapSetter setter)
         {
-            setter.SetMap(map);
-            System.out.println(iCommand.Execute(args) ? "OK" : "Wrong Parameter!");
+            setter.setMap(map);
+            System.out.println(iCommand.execute(args) ? "OK" : "Wrong Parameter!");
         }
         if (iCommand instanceof IMapGetter getter)
         {
-            System.out.println(iCommand.Execute(args) ? "OK" : "Wrong Parameter!");
-            map = getter.GetMap();
+            System.out.println(iCommand.execute(args) ? "OK" : "Wrong Parameter!");
+            map = getter.getMap();
         }
         if (map != null)
         {
-            CheckWin();
-            if (iCommand instanceof MoveCommand && !IsGameEnded)
+            checkWin();
+            if (iCommand instanceof MoveCommand && !isGameEnded)
             {
-                map.SetAI();
-                CheckWin();
+                map.setAI();
+                checkWin();
             }
         }
         else
@@ -65,25 +79,39 @@ public class GameManager
         }
     }
 
-    void CheckWin()
+    /**
+     * Check who won, or currently no-one won
+     */
+    void checkWin()
     {
-        var ret = map.Check4();
+        var ret = map.check4();
         if (ret.getValue0())
         {
             switch (ret.getValue1())
             {
-                case Yellow -> System.out.println(PlayerName + " Won!");
+                case Yellow -> System.out.println(playerName + " Won!");
                 case Red -> System.out.println("AI Won!");
                 default -> {
                     return;
                 }
             }
-            IsGameEnded = true;
+            isGameEnded = true;
         }
     }
 
-    public boolean GameEnded()
+    /** Get If the game has been ended or not.
+     * @return Is the Game Ended
+     */
+    public boolean gameEnded()
     {
-        return IsGameEnded;
+        return isGameEnded;
+    }
+
+    /** Get Internal Scanner (Input)
+     * @return Internal In;
+     */
+    public Scanner getScanner()
+    {
+        return in;
     }
 }

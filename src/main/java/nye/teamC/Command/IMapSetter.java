@@ -4,5 +4,8 @@ import nye.teamC.Map;
 
 public interface IMapSetter
 {
-    void SetMap(Map setmap);
+    /** Setting map inside the Command.
+     * @param setMap The Map from GameManager.
+     */
+    void setMap(Map setMap);
 }

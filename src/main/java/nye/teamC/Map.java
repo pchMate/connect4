@@ -1,32 +1,39 @@
 package nye.teamC;
 
+import nye.teamC.Managers.MapCheckManager;
 import org.javatuples.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class Map
 {
-    MapColor[][] internalMap;
-    protected int pWidth;
-    protected int pHeight;
+    private final MapColor[][] internalMap;
+    private final int pWidth;
+    private final int pHeight;
+    private static final int MAP_MIN = 4;
+    private static final int MAP_MAX = 12;
     // sor -> Width
     // oszlop -> Height
 
 
-    public Map(int Width, int Height) throws OutOfPlayableAreaException
+    public Map(final int width, final int height) throws OutOfPlayableAreaException
     {
-        if (!CheckWH(Width))
-            throw new OutOfPlayableAreaException(String.format("Field Width (%d) is not acceptable", Width));
-        if (!CheckWH(Height))
-            throw new OutOfPlayableAreaException(String.format("Field Height (%d) is not acceptable", Height));
-        pWidth = Width;
-        pHeight = Height;
-        internalMap = new MapColor[Width][Height];
-        for (int i = 0; i < Width; i++)
+        if (!checkWH(width))
         {
-            for (int j = 0; j < Height; j++)
+            throw new OutOfPlayableAreaException(
+                    String.format("Field Width (%d) is not acceptable", width));
+        }
+        if (!checkWH(height))
+        {
+            throw new OutOfPlayableAreaException(
+                    String.format("Field Height (%d) is not acceptable", height));
+        }
+        pWidth = width;
+        pHeight = height;
+        internalMap = new MapColor[width][height];
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
             {
                 internalMap[i][j] = MapColor.None;
             }
@@ -37,50 +44,53 @@ public class Map
     /**
      * Random egy oszlopba majd sorba teszi
      */
-    public void SetAI()
+    public void setAI()
     {
-        //TODO: make it randomize
         Random r = new Random();
         int newHeight = r.nextInt(0, pHeight);
-        int width = GetRightWidth(newHeight);
+        int width = getRightWidth(newHeight);
         if (width == -1)
+        {
             return;
-        SetColor(width, newHeight, MapColor.Red);
+        }
+        setColor(width, newHeight, MapColor.Red);
     }
 
     /** Lerak egy "korongot" a megadott oszlophoz
-     * @param Height Az oszlop a csusztatashoz
+     * @param height Az oszlop a csusztatashoz
      * @return Igazat ad ha sikeres minden
      */
-    public boolean SetPlayer(int Height)
+    public boolean setPlayer(final int height)
     {
-        int width = GetRightWidth(Height);
+        int width = getRightWidth(height);
         if (width == -1)
         {
             System.out.println("You cannot place here!");
             return false;
         }
-        return SetColor(width, Height, MapColor.Yellow);
+        return setColor(width, height, MapColor.Yellow);
     }
 
     /** Lekéri a legjobb sor szamat abban az oszlopban.
-     * @param Height Oszlop
+     * @param height Oszlop
      * @return Legjobb sor vagy -1
      */
-    public int GetRightWidth(int Height)
+    public int getRightWidth(final int height)
     {
-        for (int Width = internalMap.length - 1; Width > 0; Width--)
+        for (int width = internalMap.length - 1; width > 0; width--)
         {
-            if (CheckValid(Width, Height))
-                return Width;
+            if (checkValid(width, height))
+            {
+                return width;
+            }
         }
         return -1;
     }
 
     /**
-     * Kiir minden oszlopot, sort, "szepen"
+     * Kiir minden oszlopot, sort
      */
-    public void PrintMap()
+    public void printMap()
     {
         System.out.println();
         for (MapColor[] mapColors : internalMap)
@@ -93,34 +103,54 @@ public class Map
         }
         System.out.println();
     }
+    /**
+     * Kiir minden oszlopot, sort, "szepen"
+     */
+    public void printMapFancy()
+    {
+        System.out.println();
+        for (MapColor[] mapColors : internalMap)
+        {
+            for (MapColor mapColor : mapColors)
+            {
+                System.out.print(mapColor.name().charAt(0) + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
 
 
     /** Megnezi hogy az adott sor és oszlop kombinacio ures-e
-     * @param Width Sor
-     * @param Height Oszlop
+     * @param width Sor
+     * @param height Oszlop
      * @return Igaz ha üres
      */
-    protected boolean CheckValid(int Width, int Height)
+    protected boolean checkValid(final int width, final int height)
     {
-        if (internalMap.length < Width)
+        if (internalMap.length < width)
+        {
             return false;
-        if (internalMap[0].length < Height)
+        }
+        if (internalMap[0].length < height)
+        {
             return false;
+        }
 
-        return internalMap[Width][Height] == MapColor.None;
+        return internalMap[width][height] == MapColor.None;
     }
 
     /** Megnezi hogy le lehet rakni a szint, lerakja ha igen
-     * @param Width Sor
-     * @param Height Oszlop
+     * @param width Sor
+     * @param height Oszlop
      * @param color Szín
      * @return Igaz ha sikeres
      */
-    public boolean SetColor(int Width, int Height, MapColor color)
+    public boolean setColor(final int width, final int height, final MapColor color)
     {
-        if (CheckValid(Width, Height))
+        if (checkValid(width, height))
         {
-            internalMap[Width][Height] = color;
+            internalMap[width][height] = color;
             return true;
         }
         return false;
@@ -130,66 +160,80 @@ public class Map
      * @param number oszlop/sor
      * @return Igaz ha 4 < szam < 12
      */
-    protected boolean CheckWH(int number)
+    protected boolean checkWH(final int number)
     {
-        if (number < 4)
+        if (number < MAP_MIN)
+        {
             return false;
-        return number <= 12;
+        }
+        return number <= MAP_MAX;
     }
 
 
     /** Megnezi hogy vizszintese, függölegesen, atlosan, megvan-e a 4.
-     * @return Egy "Pair"-be az eredményt. Ha igaz akkor van és a nyertes a szin, ha nincs akkor szin is üres "None"
+     * @return Egy "Pair"-be az eredményt.
+     * Ha igaz akkor van és a nyertes a szin, ha nincs akkor szin is üres "None"
      */
-    public Pair<Boolean, MapColor> Check4()
+    public Pair<Boolean, MapColor> check4()
     {
-        // vizstintes check:
-        for (MapColor[] mapColors : internalMap)
+        var vertical = MapCheckManager.checkVertical(internalMap);
+        if (vertical.getValue0())
         {
-            MapColor prev_MapColor = MapColor.None;
-            List<MapColor> Reds = new ArrayList<>();
-            List<MapColor> Yellows = new ArrayList<>();
-            for (MapColor mapColor : mapColors)
-            {
-                if (prev_MapColor != mapColor)
-                {
-                    prev_MapColor = mapColor;
-                    Reds.clear();
-                    Yellows.clear();
-                }
-                if (prev_MapColor == MapColor.Red)
-                    Reds.add(mapColor);
-                if (prev_MapColor == MapColor.Yellow)
-                    Yellows.add(mapColor);
-                // print for safety
-                //System.out.print(prev_MapColor + " " + mapColor + " " + Reds.size() + " " + Yellows.size() + "\n");
-                if (Reds.size() == 4)
-                    return new Pair<>(true, MapColor.Red);
-                if (Yellows.size() == 4)
-                    return new Pair<>(true, MapColor.Yellow);
-            }
-            //System.out.println();
+            return vertical;
         }
-
+        var horizontal = MapCheckManager.checkHorizontal(internalMap);
+        if (horizontal.getValue0())
+        {
+            return vertical;
+        }
+        var diagonal = MapCheckManager.checkDiagonal(internalMap);
+        if (diagonal.getValue0())
+        {
+            return vertical;
+        }
         return new Pair<>(false, MapColor.None);
     }
 
-    public int GetHeight()
+    /** Get the Height of the Map
+     * @return the Height
+     */
+    public int getHeight()
     {
         return pHeight;
     }
-    public int GetWidth()
+
+    /** Get the Width of the Map
+     * @return the Width
+     */
+    public int getWidth()
     {
         return pWidth;
     }
 
-    public MapColor GetColor(int Width, int Height)
+    /** Getting the color in the Exact Place.
+     * @param width Width of the Map
+     * @param height Height of the Map
+     * @return color from the Place or None
+     */
+    public MapColor getColor(final int width, final int height)
     {
-        if (internalMap.length < Width)
+        if (internalMap.length < width)
+        {
             return MapColor.None;
-        if (internalMap[0].length < Height)
+        }
+        if (internalMap[0].length < height)
+        {
             return MapColor.None;
+        }
 
-        return internalMap[Width][Height];
+        return internalMap[width][height];
+    }
+
+    /** Get the Internal Map Copy
+     * @return Internal map Clone.
+     */
+    public MapColor[][] getInternalMapCopy()
+    {
+        return internalMap.clone();
     }
 }

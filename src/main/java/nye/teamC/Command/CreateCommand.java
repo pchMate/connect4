@@ -2,24 +2,24 @@ package nye.teamC.Command;
 
 import nye.teamC.Map;
 
-public class CreateCommand implements ICommand, IMapGetter
+public final class CreateCommand implements ICommand, IMapGetter
 {
-    Map map;
+    private Map map;
 
     @Override
-    public String Name()
+    public String name()
     {
         return "Create";
     }
 
     @Override
-    public String Usage()
+    public String usage()
     {
         return "Create Width;Height";
     }
 
     @Override
-    public boolean Execute(String args)
+    public boolean execute(final String args)
     {
         try
         {
@@ -29,14 +29,21 @@ public class CreateCommand implements ICommand, IMapGetter
             map = new Map(w, h);
             return true;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
+            System.out.println(ex.getMessage());
             return false;
         }
     }
 
     @Override
-    public Map GetMap()
+    public boolean hasArgs()
+    {
+        return true;
+    }
+
+    @Override
+    public Map getMap()
     {
         return map;
     }

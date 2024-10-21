@@ -27,8 +27,8 @@
         <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>5.14.1</version>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.14.2</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.playframework/play-logback -->
@@ -45,7 +45,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.6</version>
+            <version>1.4.12</version>
         </dependency>
     </dependencies>
 
@@ -82,7 +82,13 @@
                 <version>0.8.12</version>
                 <configuration>
                     <excludes>
-                        <exclude>*.*</exclude>
+                        <exclude>**/Main.*</exclude>
+                        <exclude>**/*Command*</exclude>
+                        <exclude>**/Map.*</exclude>
+                        <exclude>**/MapColor.*</exclude>
+                        <exclude>**/OutOfPlayableAreaException.*</exclude>
+                        <exclude>**/GameManager.*</exclude>
+                        <exclude>**/CommandManager.*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -123,10 +129,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.5.0</version>
                 <configuration>
                     <configLocation>checks.xml</configLocation>
-                    <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
                     <linkXRef>false</linkXRef>
@@ -138,8 +143,19 @@
                         <goals>
                             <goal>check</goal>
                         </goals>
+                        <configuration>
+                            <configLocation>checks.xml</configLocation>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>true</failsOnError>
+                            <linkXRef>false</linkXRef>
+                        </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.12.1</version>
             </plugin>
         </plugins>
     </build>

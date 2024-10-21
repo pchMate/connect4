@@ -3,30 +3,36 @@ package nye.teamC.Command;
 import nye.teamC.Managers.SaveManager;
 import nye.teamC.Map;
 
-public class LoadCommand implements ICommand, IMapGetter
+public final class LoadCommand implements ICommand, IMapGetter
 {
-    Map map;
+    private Map map;
 
     @Override
-    public String Name()
+    public String name()
     {
         return "Load";
     }
 
     @Override
-    public String Usage()
+    public String usage()
     {
         return "Load filename";
     }
 
     @Override
-    public boolean Execute(String args)
+    public boolean execute(final String args)
     {
-        map = SaveManager.LoadMap(args);
+        map = SaveManager.loadMap(args);
         return true;
     }
 
-    public Map GetMap()
+    @Override
+    public boolean hasArgs()
+    {
+        return true;
+    }
+
+    public Map getMap()
     {
         return map;
     }

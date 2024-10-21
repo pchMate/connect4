@@ -5,46 +5,74 @@ import nye.teamC.MapColor;
 import java.io.FileWriter;
 import java.io.FileReader;
 
-public class SaveManager
+public final class SaveManager
 {
-
-    public static void SaveMap(Map map, String filename)
+    private SaveManager()
     {
-        FileWriter file;
+
+    }
+
+    /** Save Map
+     * @param map Map File
+     * @param filename Name Of the file
+     * @return Returns false if failure, true if success
+     */
+    public static boolean saveMap(final Map map, final String filename)
+    {
+        if (map == null)
+        {
+            return false;
+        }
+        if (filename == null)
+        {
+            return false;
+        }
         try
         {
-            file = new FileWriter(filename);
-            int pW = map.GetWidth();
-            int pH = map.GetHeight();
+            FileWriter file = new FileWriter(filename);
+            int pW = map.getWidth();
+            int pH = map.getHeight();
             file.write(pW);
             file.write(pH);
             for (int i = 0; i < pW; i++)
             {
                 for (int j = 0; j < pH; j++)
                 {
-                    file.write(map.GetColor(i, j).name());
+                    file.write(map.getColor(i, j).name());
                     file.write(0x0);
                 }
             }
             file.flush();
             file.close();
             System.out.println("Saving success!");
+            return true;
         }
         catch (Exception e)
         {
             System.out.println(e.getMessage());
+            return false;
         }
     }
 
-    public  static Map LoadMap(String filename)
+    /** Load Map from File.
+     * @param filename File Name to load from.
+     * @return The Map if load success. Null if not.
+     */
+    public static Map loadMap(final String filename)
     {
         Map map = null;
         try {
             var reader = new FileReader(filename);
             int pW = reader.read();
             if (pW == -1)
+            {
                 return null;
+            }
             int pH = reader.read();
+            if (pH == -1)
+            {
+                return null;
+            }
             map = new Map(pW, pH);
             for (int i = 0; i < pW; i++)
             {
@@ -57,7 +85,7 @@ public class SaveManager
                         name.append((char) c);
                         c = reader.read();
                     }
-                    map.SetColor(i, j, MapColor.valueOf(name.toString()));
+                    map.setColor(i, j, MapColor.valueOf(name.toString()));
                 }
             }
             reader.close();

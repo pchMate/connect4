@@ -4,7 +4,7 @@ public class OutOfPlayableAreaException
         extends RuntimeException
 
 {
-    public OutOfPlayableAreaException(String message)
+    public OutOfPlayableAreaException(final String message)
     {
         super(message);
     }

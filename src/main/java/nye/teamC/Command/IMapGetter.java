@@ -4,5 +4,8 @@ import nye.teamC.Map;
 
 public interface IMapGetter
 {
-    Map GetMap();
+    /** Get Map after Loaded/Created the map
+     * @return Loaded/Created Map
+     */
+    Map getMap();
 }

@@ -2,38 +2,45 @@ package nye.teamC.Command;
 
 import nye.teamC.Map;
 
-public class MoveCommand implements ICommand, IMapSetter
+public final class MoveCommand implements ICommand, IMapSetter
 {
-    Map map;
+    private Map map;
 
     @Override
-    public String Name()
+    public String name()
     {
         return "Move";
     }
 
     @Override
-    public String Usage()
+    public String usage()
     {
         return "Move Height";
     }
 
     @Override
-    public boolean Execute(String args)
+    public boolean execute(final String args)
     {
         try
         {
             int w = Integer.parseInt(args);
-            return map.SetPlayer(w);
+            return map.setPlayer(w);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
+            System.out.println(ex.getMessage());
             return false;
         }
     }
 
     @Override
-    public void SetMap(Map setmap)
+    public boolean hasArgs()
+    {
+        return true;
+    }
+
+    @Override
+    public void setMap(final Map setmap)
     {
         map = setmap;
     }

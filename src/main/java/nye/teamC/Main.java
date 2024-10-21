@@ -2,23 +2,21 @@ package nye.teamC;
 
 import nye.teamC.Managers.GameManager;
 
-public class Main
+public final class Main
 {
-    public static void main(String[] args)
+    private Main()
+    {
+
+    }
+
+    public static void main(final String[] args)
     {
         GameManager gameManager = new GameManager();
-        gameManager.Start();
-        while (!gameManager.GameEnded())
+        gameManager.start();
+        while (!gameManager.gameEnded())
         {
-            String CommandName = gameManager.in.next();
-            String CommandParameter = "";
-            if (!CommandName.equals("Quit"))
-            {
-                CommandParameter = gameManager.in.next();
-            }
-            gameManager.UseCommand(CommandName, CommandParameter);
+            String commandName = gameManager.getScanner().next();
+            gameManager.useCommand(commandName);
         }
-
-        //gameManager.UseCommand("Create", "6;7");
     }
 }

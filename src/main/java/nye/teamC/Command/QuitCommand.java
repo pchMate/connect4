@@ -1,21 +1,27 @@
 package nye.teamC.Command;
 
-public class QuitCommand implements ICommand
+public final class QuitCommand implements ICommand
 {
     @Override
-    public String Name()
+    public String name()
     {
         return "Quit";
     }
 
     @Override
-    public String Usage()
+    public String usage()
     {
         return "Quit";
     }
 
     @Override
-    public boolean Execute(String args)
+    public boolean hasArgs()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean execute(final String args)
     {
         return false;
     }

@@ -1,41 +1,40 @@
 package nye.teamC.Managers;
 
-import nye.teamC.Command.*;
+import nye.teamC.Command.ICommand;
+import nye.teamC.Command.CreateCommand;
+import nye.teamC.Command.LoadCommand;
+import nye.teamC.Command.SaveCommand;
+import nye.teamC.Command.MoveCommand;
+import nye.teamC.Command.QuitCommand;
+import nye.teamC.Command.PrintMapCommand;
+import nye.teamC.Command.PrintMapFancyCommand;
 
 import java.util.HashSet;
 
 public class CommandManager
 {
-    HashSet<ICommand> Commands = new HashSet<>();
+    private final HashSet<ICommand> iCommands = new HashSet<>();
 
     public CommandManager()
     {
-        Commands.add(new CreateCommand());
-        Commands.add(new LoadCommand());
-        Commands.add(new SaveCommand());
-        Commands.add(new MoveCommand());
-        Commands.add(new QuitCommand());
-        Commands.add(new PrintMapCommand());
+        iCommands.add(new CreateCommand());
+        iCommands.add(new LoadCommand());
+        iCommands.add(new SaveCommand());
+        iCommands.add(new MoveCommand());
+        iCommands.add(new QuitCommand());
+        iCommands.add(new PrintMapCommand());
+        iCommands.add(new PrintMapFancyCommand());
     }
 
-
-    public boolean Execute(String name, String args)
+    /** Getting the Command from Name
+     * @param name CommandName
+     * @return Null if not found or the Command itslef
+     */
+    public ICommand getCommand(final String name)
     {
-        for (ICommand command : Commands)
+        for (ICommand command : iCommands)
         {
-            if (command.Name().equals(name))
-            {
-                return command.Execute(args);
-            }
-        }
-        return false;
-    }
-
-    public ICommand GetCommand(String name)
-    {
-        for (ICommand command : Commands)
-        {
-            if (command.Name().equals(name))
+            if (command.name().equals(name))
             {
                 return command;
             }
@@ -43,11 +42,14 @@ public class CommandManager
         return null;
     }
 
-    public void PrintCommands()
+    /**
+     * Printing Command Usage
+     */
+    public void printCommands()
     {
-        for (ICommand command : Commands)
+        for (ICommand command : iCommands)
         {
-            System.out.println(command.Usage());
+            System.out.println(command.usage());
         }
     }
 }

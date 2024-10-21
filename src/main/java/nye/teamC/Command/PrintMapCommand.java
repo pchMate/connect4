@@ -2,30 +2,36 @@ package nye.teamC.Command;
 
 import nye.teamC.Map;
 
-public class PrintMapCommand implements ICommand, IMapSetter
+public final class PrintMapCommand implements ICommand, IMapSetter
 {
-    Map map;
+    private Map map;
     @Override
-    public String Name()
+    public String name()
     {
         return "PrintMap";
     }
 
     @Override
-    public String Usage()
+    public String usage()
     {
         return "PrintMap";
     }
 
     @Override
-    public boolean Execute(String args)
+    public boolean execute(final String args)
     {
-        map.PrintMap();
+        map.printMap();
         return true;
     }
 
     @Override
-    public void SetMap(Map setmap)
+    public boolean hasArgs()
+    {
+        return false;
+    }
+
+    @Override
+    public void setMap(final Map setmap)
     {
         map = setmap;
     }
