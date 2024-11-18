@@ -7,6 +7,8 @@ import nye.teamC.Command.MoveCommand;
 import nye.teamC.Command.QuitCommand;
 import nye.teamC.Map;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class GameManager
@@ -26,6 +28,14 @@ public class GameManager
         System.out.println("Commands available for your:");
         System.out.println("Commands Should be used as CommandName Parameter");
         commandManager.printCommands();
+        try
+        {
+            LeaderBoardManager.refresh();
+        }
+        catch (FileNotFoundException e)
+        {
+            System.out.println(e.getMessage());
+        }
     }
 
     /** Use Command inside the Game.
@@ -96,6 +106,15 @@ public class GameManager
                 }
             }
             isGameEnded = true;
+            LeaderBoardManager.addNewWin(playerName);
+            try
+            {
+                LeaderBoardManager.save();
+            }
+            catch (IOException e)
+            {
+                System.out.println(e.getMessage());
+            }
         }
     }
 

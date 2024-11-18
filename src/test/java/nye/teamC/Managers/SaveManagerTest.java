@@ -1,9 +1,11 @@
 package nye.teamC.Managers;
 
 import nye.teamC.Map;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -16,6 +18,19 @@ class SaveManagerTest
     void setUp()
     {
         map = new Map(6,6);
+    }
+
+    @AfterAll
+    static void CleanupTest()
+    {
+        var test = new File("Test");
+        if (test.exists())
+        {
+            if (test.delete())
+            {
+                System.out.println("Test Delete Success!");
+            }
+        }
     }
 
     @Test

@@ -46,19 +46,37 @@ class MapCheckManagerTest
     @Test
     void checkVertical()
     {
-        var ret = MapCheckManager.checkHorizontal(map.getInternalMapCopy());
+        var ret = MapCheckManager.checkVertical(map.getInternalMapCopy());
         assertFalse(ret.getValue0());
         assertEquals(ret.getValue1(), MapColor.None);
         map.setColor(0, 0, MapColor.Yellow);
         map.setColor(1, 0, MapColor.Yellow);
         map.setColor(2, 0, MapColor.Yellow);
         map.setColor(3, 0, MapColor.Yellow);
+        ret = MapCheckManager.checkVertical(map.getInternalMapCopy());
+        assertTrue(ret.getValue0());
+        assertEquals(ret.getValue1(), MapColor.Yellow);
+        map = new Map(6,6);
+        map.setColor(0, 0, MapColor.Red);
+        map.setColor(1, 0, MapColor.Red);
+        map.setColor(2, 0, MapColor.Red);
+        map.setColor(3, 0, MapColor.Red);
+        ret = MapCheckManager.checkVertical(map.getInternalMapCopy());
+        assertTrue(ret.getValue0());
+        assertEquals(ret.getValue1(), MapColor.Red);
+        map = new Map(6,6);
+        map.setColor(0, 0, MapColor.Red);
+        map.setColor(1, 0, MapColor.Red);
+        map.setColor(2, 0, MapColor.Yellow);
+        map.setColor(3, 0, MapColor.Yellow);
+        ret = MapCheckManager.checkVertical(map.getInternalMapCopy());
+        assertFalse(ret.getValue0());
     }
 
     @Test
     void checkDiagonal()
     {
-        var ret = MapCheckManager.checkHorizontal(map.getInternalMapCopy());
+        var ret = MapCheckManager.checkDiagonal(map.getInternalMapCopy());
         assertFalse(ret.getValue0());
         assertEquals(ret.getValue1(), MapColor.None);
     }
