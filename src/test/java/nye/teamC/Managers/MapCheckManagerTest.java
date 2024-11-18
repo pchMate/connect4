@@ -79,5 +79,29 @@ class MapCheckManagerTest
         var ret = MapCheckManager.checkDiagonal(map.getInternalMapCopy());
         assertFalse(ret.getValue0());
         assertEquals(ret.getValue1(), MapColor.None);
+        map = new Map(6,6);
+        map.setColor(0, 0, MapColor.Yellow);
+        map.setColor(1, 1, MapColor.Yellow);
+        map.setColor(2, 2, MapColor.Yellow);
+        map.setColor(3, 3, MapColor.Yellow);
+        ret = MapCheckManager.checkDiagonal(map.getInternalMapCopy());
+        assertTrue(ret.getValue0());
+        assertEquals(ret.getValue1(), MapColor.Yellow);
+        map = new Map(6,6);
+        map.setColor(2, 3, MapColor.Red);
+        map.setColor(3, 2, MapColor.Red);
+        map.setColor(4, 1, MapColor.Red);
+        map.setColor(5, 0, MapColor.Red);
+        ret = MapCheckManager.checkDiagonal(map.getInternalMapCopy());
+        assertTrue(ret.getValue0());
+        assertEquals(ret.getValue1(), MapColor.Red);
+        map = new Map(6,6);
+        map.setColor(2, 3, MapColor.Red);
+        map.setColor(3, 2, MapColor.Yellow);
+        map.setColor(4, 1, MapColor.Red);
+        map.setColor(5, 0, MapColor.Red);
+        ret = MapCheckManager.checkDiagonal(map.getInternalMapCopy());
+        assertFalse(ret.getValue0());
+        assertEquals(ret.getValue1(), MapColor.None);
     }
 }

@@ -147,7 +147,6 @@
                             <configLocation>checks.xml</configLocation>
                             <consoleOutput>true</consoleOutput>
                             <failsOnError>true</failsOnError>
-                            <linkXRef>false</linkXRef>
                         </configuration>
                     </execution>
                 </executions>
