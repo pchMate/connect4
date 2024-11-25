@@ -1,0 +1,155 @@
+
+// Proxy
+
+public interface ITest
+{
+    String GetTest();
+}
+
+public class TestImpl implements ITest
+{
+
+   @Override
+   public String GetTest()
+   {
+        return "test";
+   }
+}
+
+public class TestProxy implements ITest
+{
+    TestImpl impl;
+    public TestProxy()
+    {
+        impl = new TestImpl();
+    }
+
+   @Override
+   public String GetTest()
+   {
+        System.out.println("GetTest");
+        var test = impl.GetTest();
+        System.out.println("GetTest result: " + test);
+        return test;
+   }
+}
+
+// State
+
+public abstract class DoorState
+{
+    Door door;
+    DoorState(Door _door)
+    {
+        door = _door;
+    }
+
+    public abstract void onOpen();
+    public abstract void onClosed();
+}
+
+public class ClosedState extends DoorState
+{
+    ClosedState(Door _door)
+    {
+        super(_door);
+    }
+
+    @Override
+    public void onOpen()
+    {
+        player.changeState(new OpenState(door));
+    }
+
+    @Override
+    public void onClosed()
+    {
+        player.setIsOpen(false);
+        player.GetAnimation().Start("Closing");
+    }
+}
+
+public class OpenState extends DoorState
+{
+    OpenState(Door _door)
+    {
+        super(_door);
+    }
+
+    @Override
+    public void onOpen()
+    {
+        player.setIsOpen(true);
+        player.GetAnimation().Start("Opening");
+    }
+
+    @Override
+    public void onClosed()
+    {
+        player.changeState(new ClosedState(door));
+    }
+}
+
+public class Door
+{
+    DoorState state;
+    bool isOpen;
+    Animation DoorAnimation;
+
+    public Door()
+    {
+        state = ClosedState(this);
+        // init Animation
+    }
+
+    public void changeState(DoorState state)
+    {
+            this.state = state;
+    }
+
+
+    public DoorState getState()
+    {
+        return state;
+    }
+
+    public void setIsOpen(boolean _isOpen)
+    {
+        isOpen = _isOpen;
+    }
+
+    public Animation GetAnimation()
+    {
+        return DoorAnimation;
+    }
+
+    public void OpenDoor()
+    {
+        state.onOpen();
+    }
+
+    public void CloseDoor()
+    {
+        state.onClose();
+    }
+}
+
+// Singleton
+
+public final class SingletonClass
+{
+
+    private static SingletonClass instance;
+
+    private SingletonClass()
+    {
+
+    }
+
+    public static SingletonClass GetInstance()
+    {
+        if (instance == null)
+            instance = new SingletonClass();
+        return instance;
+    }
+}

@@ -94,4 +94,15 @@ public final class LeaderBoardManager
     {
         WINNERS.clear();
     }
+
+    public static void print()
+    {
+        System.out.println("Név - Nyert körök száma");
+        for (Map.Entry<String, Integer> entry : WINNERS.entrySet())
+        {
+            String k = entry.getKey();
+            Integer v = entry.getValue();
+            System.out.println(k + " - " + v);
+        }
+    }
 }

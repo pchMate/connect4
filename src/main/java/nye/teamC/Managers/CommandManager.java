@@ -8,6 +8,7 @@ import nye.teamC.Command.MoveCommand;
 import nye.teamC.Command.QuitCommand;
 import nye.teamC.Command.PrintMapCommand;
 import nye.teamC.Command.PrintMapFancyCommand;
+import nye.teamC.Command.LeaderBoardPrintCommand;
 
 import java.util.HashSet;
 
@@ -24,11 +25,12 @@ public class CommandManager
         iCommands.add(new QuitCommand());
         iCommands.add(new PrintMapCommand());
         iCommands.add(new PrintMapFancyCommand());
+        iCommands.add(new LeaderBoardPrintCommand());
     }
 
     /** Getting the Command from Name
      * @param name CommandName
-     * @return Null if not found or the Command itslef
+     * @return Null if not found or the Command itself
      */
     public ICommand getCommand(final String name)
     {
